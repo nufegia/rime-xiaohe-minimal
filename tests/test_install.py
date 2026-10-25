@@ -21,9 +21,9 @@ class InstallationTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.base = Path(self.tmp.name)
-        self.root = self.base / 'existing user config'
+        self.root = self.base / '用户配置 existing user config'
         self.root.mkdir()
-        self.table = self.base / 'user-provided.txt'
+        self.table = self.base / '自用码表 user-provided.txt'
         # Synthetic test data, not taken from a third-party code table.
         self.table.write_text('测试甲\tabcd\t0\n测试乙\tabcd\t999\n', encoding='utf-8')
         self.original = {'patch': {'schema_list': [{'schema': 'luna_pinyin'}],

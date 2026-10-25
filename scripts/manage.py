@@ -271,6 +271,11 @@ def doctor(args):
 
 
 def main():
+    # Windows redirected stdout may otherwise use an ANSI code page. Paths and
+    # deployment instructions can contain Chinese even on an English system.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8', errors='backslashreplace')
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
     for cmd, handler in [('install', install), ('doctor', doctor)]:
