@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+patch:
+  style:
+    font_face: MiSans, MiSans L3
+    font_point: 16
+    label_font_point: 0
+    comment_font_point: 0
+    label_format: ''
+    horizontal: true
+    inline_preedit: true
+    inline_candidate: false
+    color_scheme: xiaohe_clear_blue
+    color_scheme_dark: xiaohe_clear_blue_dark
+    layout:
+      border_width: 0
+      margin_x: 4
+      margin_y: 2
+      spacing: 0
+      candidate_spacing: 6
+      hilite_spacing: 0
+      hilite_padding_x: 3
+      hilite_padding_y: 1
+      corner_radius: 3
+      round_corner: 2
+      shadow_radius: 0
+      shadow_offset_x: 0
+      shadow_offset_y: 0
+      min_width: 0
+      min_height: 0
+  menu:
+    page_size: 3
+  preset_color_schemes:
+    xiaohe_clear_blue:
+      name: 极简 · 浅色
+      author: Personal configuration · 使用 MiSans 字体
+      color_space: srgb
+      back_color: '0xF7F7F7'
+      border_color: '0xF7F7F7'
+      text_color: '0x464646'
+      candidate_text_color: '0x464646'
+      label_color: '0x888888'
+      comment_text_color: '0x00000000'
+      hilited_back_color: '0xEBEBEB'
+      hilited_text_color: '0x333333'
+      hilited_candidate_back_color: '0xEBEBEB'
+      hilited_candidate_text_color: '0x333333'
+      hilited_candidate_label_color: '0x777777'
+      hilited_comment_text_color: '0x00000000'
+      shadow_color: '0x00000000'
+    xiaohe_clear_blue_dark:
+      name: 极简 · 深色
+      author: Personal configuration · 使用 MiSans 字体
+      color_space: srgb
+      back_color: '0x252525'
+      border_color: '0x252525'
+      text_color: '0xC4C4C4'
+      candidate_text_color: '0xC4C4C4'
+      label_color: '0x888888'
+      comment_text_color: '0x00000000'
+      hilited_back_color: '0x333333'
+      hilited_text_color: '0xD5D5D5'
+      hilited_candidate_back_color: '0x333333'
+      hilited_candidate_text_color: '0xD5D5D5'
+      hilited_candidate_label_color: '0x999999'
+      hilited_comment_text_color: '0x00000000'
+      shadow_color: '0x00000000'

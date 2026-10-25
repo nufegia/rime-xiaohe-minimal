@@ -1,0 +1,8 @@
+schema:
+  schema_id: loginput_xiaohe_fixed
+  name: loginput_xiaohe_fixed
+  version: 0.1.0
+speller:
+  alphabet: abcdefghijklmnopqrstuvwxyz
+translator:
+  dictionary: loginput_xiaohe_fixed

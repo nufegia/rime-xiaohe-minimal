@@ -1,0 +1,30 @@
+小鹤音形 · 极简 Rime 配置
+Copyright (c) 2026 nufegia and contributors.
+
+This repository's configuration and code are licensed under GPL-3.0-or-later.
+Modified/combined configuration, not an official upstream distribution.
+
+Double-pinyin spelling algebra adapted from:
+  https://github.com/rime/rime-double-pinyin
+  double_pinyin_flypy.schema.yaml
+  Double-pinyin layout by 何海峰（鶴）; Rime schema by 佛振.
+  Upstream license: GNU GPL v3; see LICENSE.
+
+Frontend configuration references:
+  https://github.com/rime/squirrel (tested local version 1.1.2)
+  https://github.com/rime/weasel/wiki/Weasel-定制化
+  https://github.com/rime/weasel/blob/master/output/data/weasel.yaml
+
+This configuration uses MiSans fonts (MiSans Regular and MiSans L3).
+Fonts are NOT included or relicensed. Obtain from:
+  https://hyperos.mi.com/font/zh/download/
+
+Bundled code table: collected from publicly circulating copies and customized
+by the publisher; original provenance and redistribution permission unverified.
+Third-party rights reserved. Neither bundled nor user-imported table data is
+relicensed by this repository's GPL. A source note is not a grant of permission.
+Rime's external luna_pinyin dictionary and OpenCC conversion resources retain
+their own licenses and are obtained with the frontend or official packages.
+
+Names and trademarks belong to their respective owners. No affiliation or
+endorsement by 小鹤音形, LogInput, Rime or Xiaomi is implied.

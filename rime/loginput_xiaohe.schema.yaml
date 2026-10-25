@@ -1,0 +1,219 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Modified schema; spelling algebra adapted from rime/rime-double-pinyin.
+schema:
+  schema_id: loginput_xiaohe
+  name: 小鹤音形
+  version: 1.0.0
+  description: 固定音形码表（用户提供） + 小鹤双拼整句；不学习、不调频。
+  dependencies:
+  - loginput_xiaohe_fixed
+  author:
+  - 小鹤双拼键位设计：何海峰
+  - 双拼拼写规则参考：Rime 佛振
+  - 跨平台方案及 Lua 集成：nufegia
+switches:
+- name: ascii_mode
+  reset: 0
+  states:
+  - 中文
+  - 西文
+- name: ascii_punct
+  reset: 0
+  states:
+  - 中文标点
+  - 英文标点
+engine:
+  processors:
+  - ascii_composer
+  - lua_processor@*loginput_keys
+  - recognizer
+  - key_binder
+  - speller
+  - punctuator
+  - selector
+  - navigator
+  - express_editor
+  segmentors:
+  - ascii_segmentor
+  - matcher
+  - abc_segmentor
+  - punct_segmentor
+  - fallback_segmentor
+  translators:
+  - punct_translator
+  - lua_translator@*loginput_mix
+  filters:
+  - uniquifier
+speller:
+  alphabet: abcdefghijklmnopqrstuvwxyz
+  delimiter: ''''
+  auto_select: false
+  algebra:
+  - erase/^xx$/
+  - derive/^([jqxy])u$/$1v/
+  - derive/^([aoe])([ioun])$/$1$1$2/
+  - xform/^([aoe])(ng)?$/$1$1$2/
+  - xform/iu$/Q/
+  - xform/(.)ei$/$1W/
+  - xform/uan$/R/
+  - xform/[uv]e$/T/
+  - xform/un$/Y/
+  - xform/^sh/U/
+  - xform/^ch/I/
+  - xform/^zh/V/
+  - xform/uo$/O/
+  - xform/ie$/P/
+  - xform/i?ong$/S/
+  - xform/ing$|uai$/K/
+  - xform/(.)ai$/$1D/
+  - xform/(.)en$/$1F/
+  - xform/(.)eng$/$1G/
+  - xform/[iu]ang$/L/
+  - xform/(.)ang$/$1H/
+  - xform/ian$/M/
+  - xform/(.)an$/$1J/
+  - xform/(.)ou$/$1Z/
+  - xform/[iu]a$/X/
+  - xform/iao$/N/
+  - xform/(.)ao$/$1C/
+  - xform/ui$/V/
+  - xform/in$/B/
+  - xlit/QWRTYUIOPSDFGHJKLZXCVBNM/qwrtyuiopsdfghjklzxcvbnm/
+fixed:
+  dictionary: loginput_xiaohe_fixed
+  enable_user_dict: false
+  enable_sentence: false
+  enable_encoder: false
+  encode_commit_history: false
+  enable_completion: true
+custom:
+  dictionary: ''
+  user_dict: loginput_xiaohe_custom
+  db_class: stabledb
+  enable_sentence: false
+  enable_completion: false
+  enable_encoder: false
+  encode_commit_history: false
+translator:
+  dictionary: luna_pinyin
+  prism: loginput_xiaohe
+  user_dict: loginput_xiaohe_smart
+  enable_user_dict: false
+  enable_sentence: true
+  enable_completion: false
+  spelling_hints: 0
+  always_show_comments: false
+  preedit_format:
+  - xform/'//
+  enable_encoder: false
+  encode_commit_history: false
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: noop
+    Shift_R: noop
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear
+key_binder:
+  bindings:
+  - when: has_menu
+    accept: semicolon
+    send: '2'
+  - when: has_menu
+    accept: apostrophe
+    send: '3'
+  - when: has_menu
+    accept: Tab
+    send: Page_Down
+  - when: has_menu
+    accept: Shift+Tab
+    send: Page_Up
+  - when: has_menu
+    accept: minus
+    send: Page_Up
+  - when: has_menu
+    accept: equal
+    send: Page_Down
+recognizer:
+  import_preset: default
+punctuator:
+  full_shape:
+    '!': &id001
+      commit: ！
+    '"': &id002
+      pair:
+      - “
+      - ”
+    '#': '#'
+    $: ¥
+    '%': '%'
+    '&': '&'
+    '''': &id003
+      pair:
+      - ‘
+      - ’
+    (: （
+    ): ）
+    '*': '*'
+    +: +
+    ',': &id004
+      commit: ，
+    '-': '-'
+    .: &id005
+      commit: 。
+    /: /
+    ':': &id006
+      commit: ：
+    ;: &id007
+      commit: ；
+    <: 《
+    '=': '='
+    '>': 》
+    '?': &id008
+      commit: ？
+    '@': '@'
+    '[': 【
+    \: 、
+    ']': 】
+    ^: ……
+    _: ——
+    '`': ·
+    '{': 「
+    '|': ｜
+    '}': 」
+    '~': ～
+  half_shape:
+    '!': *id001
+    '"': *id002
+    '#': '#'
+    $: ¥
+    '%': '%'
+    '&': '&'
+    '''': *id003
+    (: （
+    ): ）
+    '*': '*'
+    +: +
+    ',': *id004
+    '-': '-'
+    .: *id005
+    /: /
+    ':': *id006
+    ;: *id007
+    <: 《
+    '=': '='
+    '>': 》
+    '?': *id008
+    '@': '@'
+    '[': 【
+    \: 、
+    ']': 】
+    ^: ……
+    _: ——
+    '`': ·
+    '{': 「
+    '|': ｜
+    '}': 」
+    '~': ～

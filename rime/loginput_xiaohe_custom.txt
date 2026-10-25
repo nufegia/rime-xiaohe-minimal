@@ -1,0 +1,6 @@
+# Realtime date templates; not personal phrases.
+@date:#yyyy#MM#dd	op	999999
+@date:#yyyy-#MM-#dd	op	999998
+@date:#yyyy.#MM.#dd	op	999997
+@date:#yyyy-#MM-#dd #HH:#mm	op	999996
+@date:#yyyy年#MM月#dd日#HH时#mm分	op	999995
