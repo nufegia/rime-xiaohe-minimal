@@ -69,6 +69,8 @@ class InstallationTests(unittest.TestCase):
         self.assertEqual(style['layout']['shadow_radius'], 0)
         self.assertEqual(style['label_font_point'], 0)
         self.assertEqual(style['comment_font_point'], 0)
+        self.assertFalse((self.root / 'lua/xiaohe_pager_keys.lua').exists())
+        self.assertFalse((self.root / 'lua/xiaohe_pager_filter.lua').exists())
 
     def test_dry_run_is_read_only(self):
         self.install('macos', '--table', str(self.table), '--dry-run')
@@ -78,6 +80,11 @@ class InstallationTests(unittest.TestCase):
         self.install('macos')
         generated = (self.root / manage.TABLE).read_text(encoding='utf-8')
         self.assertIn('name: loginput_xiaohe_fixed', generated)
+        self.assertTrue((self.root / 'lua/xiaohe_pager_keys.lua').exists())
+        self.assertTrue((self.root / 'lua/xiaohe_pager_filter.lua').exists())
+        patch = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']
+        self.assertEqual(patch['menu']['page_size'], 10)
+        self.assertIn('lua_filter@*xiaohe_pager_filter', patch['engine/filters'])
         self.assertGreater(len(generated.splitlines()), 40000)
 
     def test_phonetic_only_has_no_fixed_dependency(self):

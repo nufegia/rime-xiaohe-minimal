@@ -28,10 +28,10 @@
 
 ## 4. 验收与交付
 
-1. 执行 doctor；核对 build/loginput_xiaohe.schema.yaml 中 translator/enable_user_dict、enable_encoder、encode_commit_history 都为 false，menu/page_size 为 3。
+1. 执行 doctor；核对 build/loginput_xiaohe.schema.yaml 中 translator/enable_user_dict、enable_encoder、encode_commit_history 都为 false。macOS menu/page_size 为 10，同时必须有 xiaohe_pager_keys 处理器和 xiaohe_pager_filter 过滤器；实际显示为首屏3项、后续10项。Windows menu/page_size 仍为3。
 2. 输入 nihcuijp，确认能组成「你好世界」；使用用户熟悉的至少三个固定形码核对候选原顺序。无表模式不得声称通过此项。
 3. 输入 op：按当前本地时间显示五种格式；; 二选、' 三选；Tab 翻页到后两种日期。检查普通文本候选及标点。
-4. 验证候选横排、三项、无编号和注释；按系统实际明暗主题核对。macOS 外层系统阴影不属于可配置的主题阴影，不要承诺完全没有阴影。
+4. 验证 macOS 首屏横排三项无编号、后续每屏最多十项且显示 1—9、0，编号不进入提交文字；输入新编码回到首屏。Windows 仍验证三项无编号。macOS 请用键盘翻页，滚轮暂不支持逻辑页。按系统实际明暗主题核对。macOS 外层系统阴影不属于可配置的主题阴影，不要承诺完全没有阴影。
 5. 检查「你好」「𥥈」「𣎑」及 `oh` 的「🔴」实际字形。emoji 应回退到 macOS 的 Apple Color Emoji 或 Windows 的 Segoe UI Emoji；字体由系统提供，不打包、不替换系统字体。字体缺字与码表缺少编码是不同问题；不能把“查不到形码”说成字体问题。
 6. 通过可用的本机 Rime 引擎或原生输入测试，反复选择非首选，再检查排序和学习数据库行为。没有对应平台实机条件时，明示未验证，不能将静态配置检查当成实机验收。
 7. 报告安装目录、完整/无表模式、备份位置、部署及验证结果、未完成项和回退命令。不要上传用户备份或词库。

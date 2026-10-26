@@ -162,6 +162,9 @@ def install(args):
     files[SCHEMA + '.schema.yaml'] = dump(schema)
     files['lua/loginput_mix.lua'] = mix.encode('utf-8')
     files['lua/loginput_keys.lua'] = (REPO / 'rime/lua/loginput_keys.lua').read_bytes()
+    if frontend == 'macos':
+        for name in ('xiaohe_pager_keys.lua', 'xiaohe_pager_filter.lua'):
+            files['lua/' + name] = (REPO / 'rime/lua' / name).read_bytes()
     if not args.phonetic_only:
         files[SCHEMA + '_fixed.schema.yaml'] = (REPO / 'rime' / (SCHEMA + '_fixed.schema.yaml')).read_bytes()
         if table_data is not None:
@@ -263,9 +266,19 @@ def doctor(args):
     for key in ['enable_user_dict', 'enable_encoder', 'encode_commit_history']:
         if config.get('translator', {}).get(key) is not False:
             raise ValueError(f'Learning guard failed: translator/{key}')
-    if config.get('menu', {}).get('page_size') != 3:
-        raise ValueError('Expected menu/page_size=3')
-    print('Compiled configuration verified: learning disabled; 3 candidates per page.')
+    expected_size = 10 if frontend == 'macos' else 3
+    if config.get('menu', {}).get('page_size') != expected_size:
+        raise ValueError(f'Expected menu/page_size={expected_size}')
+    if frontend == 'macos':
+        if 'lua_filter@*xiaohe_pager_filter' not in config.get('engine', {}).get('filters', []):
+            raise ValueError('macOS logical pager filter is missing')
+        if 'lua_processor@*xiaohe_pager_keys' not in config.get('engine', {}).get('processors', []):
+            raise ValueError('macOS logical pager key handler is missing')
+        if config.get('style', {}).get('candidate_format') != '\u200b[comment][candidate]':
+            raise ValueError('macOS pager requires the display-only comment prefix')
+        print('Compiled configuration verified: learning disabled; macOS 3/10 logical pager installed.')
+    else:
+        print('Compiled configuration verified: learning disabled; Windows 3 candidates per page.')
     print('Still verify actual input: op, op;, op\', nihcuijp and a known code from your local table.')
     print('Font coverage and frontend UI need native checking; compilation alone does not verify them.')
 

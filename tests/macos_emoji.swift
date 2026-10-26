@@ -10,7 +10,7 @@ let font = NSFont(descriptor: base.fontDescriptor.addingAttributes([
 ]), size: 16)!
 let noBreak = NSAttributedString.Key("noBreak")
 
-func formatCandidate(_ candidate: String, format: String) -> NSAttributedString {
+func formatCandidate(_ candidate: String, format: String, comment: String = "") -> NSAttributedString {
     let line = NSMutableAttributedString(string: format, attributes: [.font: font])
     let marker = (line.string as NSString).range(of: "[candidate]")
     // SquirrelPanel.update applies noBreak from the marker's second UTF-16 unit.
@@ -19,6 +19,8 @@ func formatCandidate(_ candidate: String, format: String) -> NSAttributedString 
                           range: NSRange(location: marker.location + 1, length: marker.length - 1))
     }
     line.mutableString.replaceOccurrences(of: "[candidate]", with: candidate,
+                                         range: NSRange(location: 0, length: line.length))
+    line.mutableString.replaceOccurrences(of: "[comment]", with: comment,
                                          range: NSRange(location: 0, length: line.length))
     if line.length <= 10 {
         line.addAttribute(noBreak, value: true,
@@ -45,7 +47,9 @@ let configuredFormat = CommandLine.arguments[1]
 precondition(!hasBrokenGlyphs(formatCandidate("❓", format: "[candidate]")))
 precondition(hasBrokenGlyphs(formatCandidate("🔴", format: "[candidate]")))
 for candidate in ["❓", "🔴", "🟡", "🟢", "🔵", "❤️", "👍🏽", "🇨🇳"] {
-    precondition(!hasBrokenGlyphs(formatCandidate(candidate, format: configuredFormat)),
-                 "Broken candidate rendering: \(candidate)")
+    for comment in ["", "\u{200B}", "1 ", "0 "] {
+        precondition(!hasBrokenGlyphs(formatCandidate(candidate, format: configuredFormat, comment: comment)),
+                     "Broken candidate rendering: \(candidate)")
+    }
 }
 print("Candidate attribute-boundary regression passed: BMP control, broken bare non-BMP control, configured emoji rendering.")

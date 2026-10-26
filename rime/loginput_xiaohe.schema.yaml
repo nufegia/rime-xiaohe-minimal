@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Modified schema; spelling algebra adapted from rime/rime-double-pinyin.
+# Spelling algebra adapted from rime/rime-double-pinyin.
 schema:
   schema_id: loginput_xiaohe
   name: 小鹤音形
-  version: 1.0.0
-  description: 固定音形码表（用户提供） + 小鹤双拼整句；不学习、不调频。
+  version: 1.1.0
+  description: 固定音形码表 + 小鹤双拼整句；不学习、不调频；macOS 首屏3项、后续10项。
   dependencies:
   - loginput_xiaohe_fixed
   author:

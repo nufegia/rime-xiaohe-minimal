@@ -1,4 +1,4 @@
-# macOS: U+200B prefix prevents Squirrel 1.1.2 noBreak from splitting UTF-16 surrogate pairs.
+# macOS: first page 3, subsequent pages 10. U+200B prevents surrogate splitting.
 patch:
   style:
     color_scheme: xiaohe_clear_blue
@@ -13,7 +13,7 @@ patch:
     label_font_point: 11
     comment_font_face: MiSans-Regular, MiSans L3, AppleColorEmoji
     comment_font_point: 11
-    candidate_format: ​[candidate]
+    candidate_format: ​[comment][candidate]
     corner_radius: 3
     hilited_corner_radius: 2
     border_width: 4
@@ -25,7 +25,7 @@ patch:
     memorize_size: false
     show_paging: false
   menu:
-    page_size: 3
+    page_size: 10
   preset_color_schemes:
     xiaohe_clear_blue:
       name: 极简 · 浅色
@@ -65,3 +65,17 @@ patch:
   switches/@0/abbrev:
   - ''
   - ''
+  engine/processors:
+  - ascii_composer
+  - lua_processor@*xiaohe_pager_keys
+  - lua_processor@*loginput_keys
+  - recognizer
+  - key_binder
+  - speller
+  - punctuator
+  - selector
+  - navigator
+  - express_editor
+  engine/filters:
+  - uniquifier
+  - lua_filter@*xiaohe_pager_filter
