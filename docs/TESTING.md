@@ -31,3 +31,13 @@ GitHub Actions 在 macOS、Windows 和 Linux 运行安装器测试。请查看�
 ## emoji 回退验证（2026-10-26）
 
 macOS 显式加入 AppleColorEmoji 后，本机 CoreText 验证 🔴、🟡、🟢、🔵、❤️、👍🏽、家庭组合和中国旗帜均无缺失字形，中文和生僻字仍由 MiSans 系列提供。Rime 查询 oh 确为 U+1F534。修改前 CoreText 也能自动回退，因此用户截图中的原生窗口异常尚不能仅由底层测试完全定位，仍需实际候选窗口复核。Windows 设置 Segoe UI Emoji，尚未实机验收字形。
+
+## 补充平面字符排版根因与修复（2026-10-26）
+
+已在 AppKit/CoreText 复现原截图的两个 LastResort 代理对方框：裸 `[candidate]` 在第二个 UTF-16 码元起添加 noBreak 属性，拆开开头非 BMP 字符；❓为 BMP 字符，故不受影响。为 macOS 候选格式加入 U+200B 零宽前缀后，🔴🟡🟢🔵及生僻字恢复正常，真实候选和上屏内容不变。
+
+此前单纯的字体覆盖测试遗漏了候选属性边界；“原生异常尚未定位”的记录已由本次复现取代。新增 tests/macos_emoji.swift 复现 SquirrelPanel 的候选格式处理，同时验证旧格式会失败、新格式无 LastResort；macOS CI 执行此回归。
+
+另外验证了鼠须管字体解码器会将 `MiSans-L3` 误解为 MiSans 的另一字重并去重，已改为字体名称 `MiSans L3`，确实保留三个字体对象。Windows 沿用原平台的字体名和布局，不套用 macOS 零宽前缀。
+
+本次通过同排版属性路径及离屏文本渲染验证，并核对已部署配置；自动按键未经过系统输入法组合路径，因此未获得实际鼠须管候选窗口截图。

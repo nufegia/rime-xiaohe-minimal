@@ -22,6 +22,8 @@
 - macOS 中英文切换时不显示“中文”或“西文”状态提示；不改变 Caps Lock 的原有按键行为。
 - 中文使用 **MiSans 字体及同系列 MiSans L3 生僻字扩展**；emoji 显式回退到 macOS 的 Apple Color Emoji 或 Windows 的 Segoe UI Emoji。系统 emoji 字体不打包。不保证覆盖所有 Unicode 汉字或系统尚未支持的新 emoji。
 
+macOS 候选格式带一个 U+200B 零宽前缀，用于绕过鼠须管 1.1.2 在无编号候选开头拆分非 BMP 字符的排版问题；不改变候选文字或上屏内容。请勿直接将 `candidate_format` 简化成裸 `[candidate]`。
+
 macOS：主题绘制阴影为零，但鼠须管 1.1.2 仍固定启用 macOS 外层窗口阴影。Windows：独立设置 `shadow_radius: 0` 和透明阴影色。两平台使用相近风格，不承诺像素一致。
 
 ## 安装
