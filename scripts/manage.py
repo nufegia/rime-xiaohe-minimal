@@ -118,10 +118,28 @@ def default_user_dir(frontend):
     return Path(os.environ['APPDATA']) / 'Rime'
 
 
+def merge_saved_option(patch):
+    # Extend the existing global list rather than replacing other schemes' options.
+    lists = []
+    nested = patch.get('switcher', {})
+    if isinstance(nested, dict) and 'save_options' in nested:
+        lists.append(nested['save_options'])
+    for key in ('switcher/save_options', 'switcher/save_options/+',
+                'switcher/save_options/@next'):
+        if key in patch:
+            value = patch[key]
+            lists.append([value] if key.endswith('/@next') else value)
+    if any(not isinstance(value, list) for value in lists):
+        raise ValueError('switcher/save_options must be a list; merge it manually')
+    if not any('traditional' in value for value in lists):
+        patch.setdefault('switcher/save_options/+', []).append('traditional')
+
+
 def merged_schema_list(doc):
     patch = doc.setdefault('patch', {})
     if not isinstance(patch, dict):
         raise ValueError('default.custom.yaml patch must be a mapping')
+    merge_saved_option(patch)
     for key in ('schema_list', 'schema_list/+', 'schema_list/@next'):
         existing = patch.get(key, [])
         values = existing if isinstance(existing, list) else [existing]
@@ -278,8 +296,11 @@ def doctor(args):
         raise ValueError(f'Expected menu/page_size={expected_size}')
     switches = config.get('switches', [])
     if not any(item.get('name') == 'traditional' and item.get('states') == ['简体', '繁體']
-               and item.get('reset') == 0 for item in switches):
+               and 'reset' not in item for item in switches):
         raise ValueError('Simplified/traditional switch is missing or overridden')
+    defaults = read_yaml(root / 'build/default.yaml')
+    if 'traditional' not in defaults.get('switcher', {}).get('save_options', []):
+        raise ValueError('Traditional choice is not configured to persist')
     conversion = config.get('traditional', {})
     if conversion.get('option_name') != 'traditional' or conversion.get('opencc_config') != 's2t.json':
         raise ValueError('Expected native OpenCC s2t conversion')

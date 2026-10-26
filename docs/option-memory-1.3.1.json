@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-26",
+  "engine_host": "macOS; Squirrel bundled librime 1.16.0 + Lua",
+  "results": [
+    {
+      "platform": "macos",
+      "checks": 8,
+      "failures": 0,
+      "native_frontend_ui_verified": false,
+      "schema_switch_session_recreation_process_restart": true
+    },
+    {
+      "platform": "windows",
+      "checks": 8,
+      "failures": 0,
+      "native_frontend_ui_verified": false,
+      "schema_switch_session_recreation_process_restart": true
+    },
+    {
+      "platform": "fcitx5",
+      "checks": 8,
+      "failures": 0,
+      "native_frontend_ui_verified": false,
+      "schema_switch_session_recreation_process_restart": true
+    },
+    {
+      "platform": "ibus",
+      "checks": 8,
+      "failures": 0,
+      "native_frontend_ui_verified": false,
+      "schema_switch_session_recreation_process_restart": true
+    }
+  ]
+}

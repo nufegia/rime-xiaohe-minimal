@@ -120,13 +120,30 @@ class InstallationTests(unittest.TestCase):
             with self.subTest(frontend=frontend):
                 self.install(frontend)
                 schema = manage.read_yaml(self.root / 'loginput_xiaohe.schema.yaml')
-                self.assertIn({'name': 'traditional', 'reset': 0,
+                self.assertIn({'name': 'traditional',
                                'states': ['简体', '繁體']}, schema['switches'])
                 self.assertEqual(schema['traditional']['opencc_config'], 's2t.json')
                 patch = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']
                 self.assertEqual(patch['engine/filters'][0], 'simplifier@traditional')
                 self.assertLess(patch['engine/filters'].index('simplifier@traditional'),
                                 patch['engine/filters'].index('lua_filter@*xiaohe_pager_filter'))
+
+    def test_saved_option_merge_preserves_existing_choices_and_is_idempotent(self):
+        for initial in ({'switcher/save_options': ['ascii_punct']},
+                        {'switcher': {'save_options': ['full_shape']}},
+                        {'switcher/save_options/+': ['zh_hans']},
+                        {'switcher/save_options/@next': 'zh_hant'}):
+            with self.subTest(initial=initial):
+                config = {'patch': initial}
+                before = json.loads(json.dumps(initial))
+                manage.merged_schema_list(config)
+                manage.merged_schema_list(config)
+                self.assertEqual(config['patch']['switcher/save_options/+'].count('traditional'), 1)
+                for key, value in before.items():
+                    if key != 'switcher/save_options/+':
+                        self.assertEqual(config['patch'][key], value)
+                    else:
+                        self.assertEqual(config['patch'][key][0], value[0])
 
     def test_dry_run_is_read_only(self):
         self.install('macos', '--table', str(self.table), '--dry-run')

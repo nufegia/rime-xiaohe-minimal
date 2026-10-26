@@ -33,7 +33,7 @@
 2. 输入 nihcuijp，确认能组成「你好世界」；使用用户熟悉的至少三个固定形码核对候选原顺序。无表模式不得声称通过此项。
 3. 输入 op：按当前本地时间显示五种格式；; 二选、' 三选；Tab 翻页到后两种日期。检查普通文本候选及标点。
 4. 验证首屏三项无编号、后续每屏最多十项且显示 1—9、0，编号不进入提交文字；输入新编码回到首屏。Windows／Linux 编号应在候选文字前，分别检查两个窗口停在不同逻辑页时标签互不影响。所有平台使用键盘翻页；面板按钮和滚轮暂不支持逻辑页。Linux 外观取决于桌面面板。按系统实际明暗主题核对。macOS 外层系统阴影不属于可配置的主题阴影，不要承诺完全没有阴影。
-5. 打开方案菜单，检查「简体／繁體」开关。默认简体，输入 hjyu 为「汉语」，切换后候选和提交为「漢語」；tf 为「頭髮」，favj 为「發展」。切换时当前页回到首屏；繁体候选仍保持3/10分页且无重复项。检查编译结果的 traditional/option_name=traditional、opencc_config=s2t.json，以及 engine/filters 中 simplifier@traditional 位于 uniquifier 和分页过滤器之前。
+5. 打开方案菜单，检查「简体／繁體」开关。首次无保存状态时默认简体，输入 hjyu 为「汉语」，切换后候选和提交为「漢語」；tf 为「頭髮」，favj 为「發展」。另外检查切换到其他方案再切回、重新创建输入会话后保持所选简繁；traditional 开关不能包含 reset，build/default.yaml 的 switcher/save_options 必须包含 traditional。切换时当前页回到首屏；繁体候选仍保持3/10分页且无重复项。检查编译结果的 traditional/option_name=traditional、opencc_config=s2t.json，以及 engine/filters 中 simplifier@traditional 位于 uniquifier 和分页过滤器之前。
 6. 检查「你好」「𥥈」「𣎑」及 `oh` 的「🔴」实际字形。emoji 应回退到 macOS 的 Apple Color Emoji 或 Windows 的 Segoe UI Emoji；字体由系统提供，不打包、不替换系统字体。字体缺字与码表缺少编码是不同问题；不能把“查不到形码”说成字体问题。
 7. 通过可用的本机 Rime 引擎或原生输入测试，反复选择非首选，再检查排序和学习数据库行为。没有对应平台实机条件时，明示未验证，不能将静态配置检查当成实机验收。
 8. 报告安装目录、完整/无表模式、备份位置、部署及验证结果、未完成项和回退命令。不要上传用户备份或词库。

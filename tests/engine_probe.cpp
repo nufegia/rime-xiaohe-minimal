@@ -45,14 +45,25 @@ int main(int argc,char**argv){
     std::string mode=pos==std::string::npos?"query":line.substr(0,pos);
     std::string input=pos==std::string::npos?line:line.substr(pos+1);
     if(mode=="session"){sid=input=="1" ? sid1 : sid2;continue;}
+    if(mode=="schema") {
+      if(!api->select_schema(sid, input.c_str())) return 4;
+    }
+    if(mode=="recreate") {
+      bool first = sid == sid1;
+      api->destroy_session(sid);
+      sid=api->create_session();
+      if(first) sid1=sid; else sid2=sid;
+      if(!api->select_schema(sid,"loginput_xiaohe")) return 5;
+      api->set_option(sid,"ascii_mode",False);
+    }
     if(mode=="traditional") {
       api->set_option(sid, "traditional", input=="1" ? True : False);
     }
-    if(mode!="step" && mode!="traditional")api->clear_composition(sid);
+    if(mode!="step" && mode!="traditional" && mode!="schema" && mode!="recreate")api->clear_composition(sid);
     RIME_STRUCT(RimeCommit,old);if(api->get_commit(sid,&old))api->free_commit(&old);
     auto start=std::chrono::steady_clock::now();
     if(mode=="keys" || mode=="step")api->simulate_key_sequence(sid,input.c_str());
-    else if(mode!="traditional")api->set_input(sid,input.c_str());
+    else if(mode!="traditional" && mode!="schema" && mode!="recreate")api->set_input(sid,input.c_str());
     RIME_STRUCT(RimeContext,ctx);api->get_context(sid,&ctx);
     auto prop=[&](const char* name){char value[256]={};api->get_property(sid,name,value,sizeof(value));return std::string(value);};
     std::cout<<"{\"mode\":"<<quote(mode.c_str())<<",\"input\":"<<quote(input.c_str())
