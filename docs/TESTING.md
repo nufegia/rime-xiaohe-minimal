@@ -27,3 +27,7 @@ GitHub Actions 在 macOS、Windows 和 Linux 运行安装器测试。请查看�
 - 未自动截图验收 macOS 当前原生候选窗口。主题编译结果不等同于窗口截图。
 - 不保证任意旧版前端、缺失 Lua 的发行版或所有字体覆盖。
 - 授权来源无法通过技术测试补足；码表权利状态见 LICENSING.md。
+
+## emoji 回退验证（2026-10-26）
+
+macOS 显式加入 AppleColorEmoji 后，本机 CoreText 验证 🔴、🟡、🟢、🔵、❤️、👍🏽、家庭组合和中国旗帜均无缺失字形，中文和生僻字仍由 MiSans 系列提供。Rime 查询 oh 确为 U+1F534。修改前 CoreText 也能自动回退，因此用户截图中的原生窗口异常尚不能仅由底层测试完全定位，仍需实际候选窗口复核。Windows 设置 Segoe UI Emoji，尚未实机验收字形。

@@ -1,7 +1,6 @@
-# SPDX-License-Identifier: GPL-3.0-or-later
 patch:
   style:
-    font_face: MiSans, MiSans L3
+    font_face: MiSans, MiSans L3, Segoe UI Emoji
     font_point: 16
     label_font_point: 0
     comment_font_point: 0
