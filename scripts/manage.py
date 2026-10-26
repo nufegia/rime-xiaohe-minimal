@@ -276,6 +276,16 @@ def doctor(args):
     expected_size = 10
     if config.get('menu', {}).get('page_size') != expected_size:
         raise ValueError(f'Expected menu/page_size={expected_size}')
+    switches = config.get('switches', [])
+    if not any(item.get('name') == 'traditional' and item.get('states') == ['简体', '繁體']
+               and item.get('reset') == 0 for item in switches):
+        raise ValueError('Simplified/traditional switch is missing or overridden')
+    conversion = config.get('traditional', {})
+    if conversion.get('option_name') != 'traditional' or conversion.get('opencc_config') != 's2t.json':
+        raise ValueError('Expected native OpenCC s2t conversion')
+    filters = config.get('engine', {}).get('filters', [])
+    if not filters or filters[0] != 'simplifier@traditional':
+        raise ValueError('Traditional conversion must precede deduplication and pagination')
     if 'lua_filter@*xiaohe_pager_filter' not in config.get('engine', {}).get('filters', []):
         raise ValueError('Logical pager filter is missing')
     if 'lua_processor@*xiaohe_pager_keys' not in config.get('engine', {}).get('processors', []):

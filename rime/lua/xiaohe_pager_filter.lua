@@ -14,6 +14,7 @@ function M.func(input, env)
   local seg = not comp:empty() and comp:back() or nil
   local signature = ctx.input .. ':' .. tostring(ctx.caret_pos) .. ':'
       .. tostring(seg and seg.start or 0) .. ':' .. tostring(seg and seg._end or 0)
+      .. ':' .. tostring(ctx:get_option('traditional'))
   if ctx:get_property('xh_pager_signature') ~= signature then
     put(ctx, 'page', 0)
     put(ctx, 'signature', signature)
@@ -25,15 +26,23 @@ function M.func(input, env)
   local index = 0
   -- Buffer a full logical page and one lookahead BEFORE yielding, so metadata
   -- is available even when the native menu stops requesting at ten candidates.
+  -- Conversion can merge distinct source candidates into the same text.
+  -- Native uniquifier sees the menu's yielded candidates; while this filter
+  -- buffers before yielding, that list is still empty. Deduplicate the stream
+  -- here too, before counting logical offsets, so pages remain unique/continuous.
+  local seen = {}
   for candidate in input:iter() do
-    if index >= offset then
-      if #window == limit then
-        next_page = true
-        break
+    if not seen[candidate.text] then
+      seen[candidate.text] = true
+      if index >= offset then
+        if #window == limit then
+          next_page = true
+          break
+        end
+        window[#window + 1] = candidate
       end
-      window[#window + 1] = candidate
+      index = index + 1
     end
-    index = index + 1
   end
   -- select_keys belongs to this Schema instance, unlike shared ConfigData.
   -- All three native frontends use these characters as labels when no explicit

@@ -115,6 +115,19 @@ class InstallationTests(unittest.TestCase):
         self.assertFalse(config['xiaohe_pager/native_labels'])
         self.assertEqual(config['style']['candidate_format'], '\u200b[comment][candidate]')
 
+    def test_native_traditional_switch_on_all_platforms(self):
+        for frontend in ('macos', 'windows', 'fcitx5', 'ibus'):
+            with self.subTest(frontend=frontend):
+                self.install(frontend)
+                schema = manage.read_yaml(self.root / 'loginput_xiaohe.schema.yaml')
+                self.assertIn({'name': 'traditional', 'reset': 0,
+                               'states': ['简体', '繁體']}, schema['switches'])
+                self.assertEqual(schema['traditional']['opencc_config'], 's2t.json')
+                patch = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']
+                self.assertEqual(patch['engine/filters'][0], 'simplifier@traditional')
+                self.assertLess(patch['engine/filters'].index('simplifier@traditional'),
+                                patch['engine/filters'].index('lua_filter@*xiaohe_pager_filter'))
+
     def test_dry_run_is_read_only(self):
         self.install('macos', '--table', str(self.table), '--dry-run')
         self.assertEqual(set(p.name for p in self.root.iterdir()), {'default.custom.yaml'})

@@ -14,7 +14,10 @@ end
 function M.func(input, seg, env)
   local seen = {}
   local function emit(cand, smart)
-    local text = smart and env.simplify:convert(cand.text) or cand.text
+    -- Keep the phonetic dictionary's original traditional distinctions intact.
+    -- Fixed/custom entries pass through the native s2t filter downstream.
+    local to_simplified = smart and not env.engine.context:get_option('traditional')
+    local text = to_simplified and env.simplify:convert(cand.text) or cand.text
     if seen[text] then return end
     seen[text] = true
     if smart then

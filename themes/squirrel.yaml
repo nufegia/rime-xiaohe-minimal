@@ -78,5 +78,6 @@ patch:
   - navigator
   - express_editor
   engine/filters:
+  - simplifier@traditional
   - uniquifier
   - lua_filter@*xiaohe_pager_filter

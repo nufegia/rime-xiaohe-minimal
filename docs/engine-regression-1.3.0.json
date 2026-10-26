@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-26",
+  "engine_host": "macOS; Squirrel bundled librime 1.16.0 + Lua",
+  "native_frontends_executed": false,
+  "results": [
+    {
+      "platform": "macos",
+      "cases": 1499,
+      "simplified_cases": 1205,
+      "traditional_cases": 294,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "traditional_filter_verified": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ],
+      "menu_switch_cases": 6
+    },
+    {
+      "platform": "windows",
+      "cases": 1499,
+      "simplified_cases": 1205,
+      "traditional_cases": 294,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "traditional_filter_verified": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ],
+      "menu_switch_cases": 6
+    },
+    {
+      "platform": "fcitx5",
+      "cases": 1499,
+      "simplified_cases": 1205,
+      "traditional_cases": 294,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "traditional_filter_verified": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ],
+      "menu_switch_cases": 6
+    },
+    {
+      "platform": "ibus",
+      "cases": 1499,
+      "simplified_cases": 1205,
+      "traditional_cases": 294,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "traditional_filter_verified": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ],
+      "menu_switch_cases": 6
+    }
+  ]
+}

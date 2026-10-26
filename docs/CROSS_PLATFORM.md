@@ -12,6 +12,14 @@
 
 Rime 原生页号仍为0，原生菜单认为自己只有一页。滚轮或面板翻页按钮若直接调用 change_page，不会进入本方案的 Lua 逻辑，因而不支持。请用上述键盘翻页。鼠标直接点击当前候选仍使用真实的当前页索引，但没有做目标平台 UI 验收。
 
+## 简体／繁體开关（1.3.0）
+
+四种平台共用 switches/traditional 开关，默认简体。方案菜单通常由 Ctrl+` 打开，实际热键沿用现有全局配置；本项目不抢占额外快捷键。原生 simplifier@traditional 使用 OpenCC s2t.json，位于 uniquifier 和逻辑分页之前；转换提示设为 none。
+
+整句候选在繁体模式保留 luna_pinyin 原有繁体，简体模式才执行原有 t2s 转换；固定表与手工短语由原生过滤器转换。原码表不改写。转换导致的一简多繁可以增加候选，转换后同字合并则减少候选。Lua 缓冲会使原生 uniquifier 暂时看不到尚未 yield 的候选，因此分页过滤器也在计算偏移前按候选文字去重，保持连续页。简繁状态参与页签名，切换后立即刷新到首屏。
+
+不会转换已经上屏的文字。通用繁体不等同于台湾地区词语本地化；本方案没有自动启用 s2twp。转换使用当前候选的字词上下文，不能替代全文语义判断。新会话/重新选择方案以 switches 的 reset: 0 默认简体为准。
+
 ## 安装路径
 
 | 前端 | 安装参数 | 默认目录 |
@@ -41,7 +49,7 @@ python tests/check_pager_engine.py --probe /tmp/xiaohe-engine-probe \
   --work-dir /tmp/xiaohe-engine-check-new
 ```
 
---work-dir 必须为空，防止污染既有文件。脚本通过安装器生成四种平台配置，并生成一个关闭分页的原方案基准；部署后运行全页顺序、所有 hs／kr 数字选择、边界、编辑、日期、emoji 和双会话隔离检查。h 仅用于退格后的首屏检查，不把探针截断的2000项结果称为全部候选。报告保存在指定目录的 report.json。本次逻辑结果见 [engine-regression-1.2.0.json](engine-regression-1.2.0.json)。
+--work-dir 必须为空，防止污染既有文件。脚本通过安装器生成四种平台配置，并生成一个关闭分页的原方案基准；部署后运行全页顺序、所有 hs／kr 数字选择、边界、编辑、日期、emoji 和双会话隔离检查。h 仅用于退格后的首屏检查，不把探针截断的2000项结果称为全部候选。报告保存在指定目录的 report.json。本次逻辑结果见 [engine-regression-1.3.0.json](engine-regression-1.3.0.json)。
 
 安装器检查：python -m unittest discover -s tests -v。CI 在 macOS、Windows、Ubuntu 执行安装器测试；当前不安装原生输入法，也不将引擎探针测试混称为三系统原生 UI 测试。
 

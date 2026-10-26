@@ -124,9 +124,68 @@ for frontend in ('macos', 'windows', 'fcitx5', 'ibus'):
             labels = [' ']*len(row['candidates']) if page == 0 else [str((i+1)%10) for i in range(len(row['candidates']))]
             assert row['labels'] == labels, row
     assert not failures, failures[:3]
-    reports.append({'platform': frontend, 'cases': len(rows)+len(dates)+len(sessions),
+    # Native OpenCC filter: compare all logical traditional pages with an
+    # unpaginated native-filter baseline, including post-conversion collisions.
+    trad_codes = ['hs', 'hjyu', 'f', 'tf', 'favj', 'gjjk', 'nihcuijp']
+    reference = run(BASELINE, ['traditional\t1'] + ['all\t'+c for c in trad_codes])[1:]
+    trad_commands = ['traditional\t1']
+    trad_checks = [None]
+    for code, original in zip(trad_codes, reference):
+        words = [c['text'] for c in original['candidates']]
+        assert len(words) < 2000 and len(words) == len(set(words)), (code, words)
+        pages = [words[:3]] + [words[i:i+10] for i in range(3, len(words), 10)]
+        for page, window in enumerate(pages):
+            trad_commands.append(('keys\t'+code) if page == 0 else 'step\t{Tab}')
+            trad_checks.append((window, None, page))
+        for page, window in enumerate(pages if code == 'hs' else []):
+            for index in {0, len(window)-1}:
+                if not window:
+                    continue
+                trad_commands.append('keys\t'+code+'{Tab}'*page+str((index+1)%10))
+                trad_checks.append(([], window[index], None))
+    for code, traditional_word in [('hjyu', '漢語'), ('tf', '頭髮'),
+                                    ('favj', '發展'), ('gjjk', '乾淨'),
+                                    ('favjvsgo', '發展中國'), ('oh', '🔴')]:
+        trad_commands.append('keys\t'+code+' ')
+        trad_checks.append(([], traditional_word, None))
+    converted = run(STAGE, trad_commands)
+    for row, expected in zip(converted, trad_checks):
+        assert row['traditional'] is True
+        if expected is None:
+            continue
+        words, committed, page = expected
+        assert [c['text'] for c in row['candidates']] == words, row
+        if committed is not None:
+            assert row['commit'] == committed, row
+        if page is not None:
+            assert int(row['logical_page']) == page
+            if native:
+                assert row['labels'] == ([' ']*len(words) if page == 0 else [str((i+1)%10) for i in range(len(words))])
+    switching = run(STAGE, ['traditional\t1', 'keys\ths{Tab}', 'traditional\t0',
+                           'keys\thjyu', 'traditional\t1', 'step\t ',
+                           'session\t2', 'keys\thjyu', 'session\t1',
+                           'keys\thjyu', 'keys\top{Tab}2'])[1:]
+    assert switching[1]['logical_page'] == '0' and switching[1]['visible'] == 3
+    assert switching[2]['candidates'][0]['text'] == '汉语'
+    assert switching[3]['candidates'][0]['text'] == '漢語'
+    assert len({c['text'] for c in switching[3]['candidates']}) == 3
+    assert switching[4]['commit'] == '漢語'
+    assert switching[5]['traditional'] is False and switching[5]['candidates'][0]['text'] == '汉语'
+    assert switching[6]['traditional'] is True and switching[6]['candidates'][0]['text'] == '漢語'
+    assert '時' in switching[7]['commit'] and '分' in switching[7]['commit']
+    assert all('\u200b' not in row['commit'] for row in converted+switching)
+    assert not (STAGE/'loginput_xiaohe_smart.userdb').exists()
+    menu = run(STAGE, ['keys\t{Control+grave}', 'step\t2'])
+    option_index = next(i for i, c in enumerate(menu[1]['candidates']) if c['text'] == '简体')
+    toggled = run(STAGE, ['keys\t{Control+grave}', 'step\t2',
+                          'step\t'+str((option_index+1)%10), 'keys\thjyu '])
+    assert toggled[-1]['traditional'] is True and toggled[-1]['commit'] == '漢語'
+    traditional_cases = len(converted) + len(switching) + len(menu) + len(toggled)
+    reports.append({'platform': frontend, 'cases': len(rows)+len(dates)+len(sessions)+traditional_cases,
+                    'simplified_cases': len(rows)+len(dates)+len(sessions),
+                    'traditional_cases': traditional_cases,
                     'failures': len(failures), 'native_ui_verified': False,
-                    'cross_session_labels_isolated': True, 'no_learning_database': True,
+                    'cross_session_labels_isolated': True, 'no_learning_database': True, 'traditional_filter_verified': True,
                     'baseline_candidate_counts': {k: len(v) for k,v in base.items()},
                     'edit_prefix_only': ['h']})
 (WORK/'report.json').write_text(json.dumps(reports, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
