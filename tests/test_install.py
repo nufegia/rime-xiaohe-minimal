@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import yaml
 
@@ -67,10 +68,52 @@ class InstallationTests(unittest.TestCase):
         self.assertEqual(config['patch']['schema_list/+'], [{'schema': 'loginput_xiaohe'}])
         style = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']['style']
         self.assertEqual(style['layout']['shadow_radius'], 0)
-        self.assertEqual(style['label_font_point'], 0)
+        self.assertEqual(style['label_font_point'], 11)
+        self.assertEqual(style['label_format'], '%s')
         self.assertEqual(style['comment_font_point'], 0)
-        self.assertFalse((self.root / 'lua/xiaohe_pager_keys.lua').exists())
-        self.assertFalse((self.root / 'lua/xiaohe_pager_filter.lua').exists())
+        self.assertTrue((self.root / 'lua/xiaohe_pager_keys.lua').exists())
+        self.assertTrue((self.root / 'lua/xiaohe_pager_filter.lua').exists())
+
+    def test_linux_profiles_roundtrip_without_overriding_panel_styles(self):
+        for frontend in ('fcitx5', 'ibus'):
+            with self.subTest(frontend=frontend):
+                self.install(frontend, '--table', str(self.table))
+                config = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']
+                self.assertNotIn('style', config)
+                self.assertTrue(config['xiaohe_pager/native_labels'])
+                self.assertEqual(config['menu']['page_size'], 10)
+                self.assertEqual(config['menu']['alternative_select_keys'], ' ' * 10)
+                self.assertEqual(config['menu']['alternative_select_labels'], [])
+                self.assertIn('lua_filter@*xiaohe_pager_filter', config['engine/filters'])
+                self.assertTrue((self.root / 'lua/xiaohe_pager_keys.lua').exists())
+                self.run_script('restore', '--backup', str(self.backups()[-1]))
+                self.assertEqual(manage.read_yaml(self.root / 'default.custom.yaml'), self.original)
+                self.assertFalse((self.root / 'lua/xiaohe_pager_keys.lua').exists())
+
+    def test_linux_paths_and_explicit_frontend_choice(self):
+        with patch.dict(manage.os.environ, {'XDG_DATA_HOME': str(self.base / 'data'),
+                                           'XDG_CONFIG_HOME': str(self.base / 'config')}):
+            self.assertEqual(manage.default_user_dir('fcitx5'), self.base / 'data/fcitx5/rime')
+            self.assertEqual(manage.default_user_dir('ibus'), Path.home() / '.config/ibus/rime')
+        with patch.object(manage.platform, 'system', return_value='Linux'):
+            with self.assertRaises(ValueError):
+                manage.frontend_name(None)
+
+    def test_old_flat_menu_patches_cannot_override_pager(self):
+        (self.root / 'loginput_xiaohe.custom.yaml').write_bytes(manage.dump({'patch': {
+            'menu/page_size': 3, 'menu/alternative_select_labels': ['old'] * 10}}))
+        self.install('windows')
+        config = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']
+        self.assertNotIn('menu/page_size', config)
+        self.assertNotIn('menu/alternative_select_labels', config)
+        self.assertEqual(config['menu']['alternative_select_labels'], [])
+
+    def test_switching_back_to_macos_restores_comment_labels(self):
+        self.install('windows')
+        self.install('macos')
+        config = manage.read_yaml(self.root / 'loginput_xiaohe.custom.yaml')['patch']
+        self.assertFalse(config['xiaohe_pager/native_labels'])
+        self.assertEqual(config['style']['candidate_format'], '\u200b[comment][candidate]')
 
     def test_dry_run_is_read_only(self):
         self.install('macos', '--table', str(self.table), '--dry-run')

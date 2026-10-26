@@ -35,6 +35,14 @@ function M.func(input, env)
     end
     index = index + 1
   end
+  -- select_keys belongs to this Schema instance, unlike shared ConfigData.
+  -- All three native frontends use these characters as labels when no explicit
+  -- alternative_select_labels exist. Spaces hide first-page digits; Lua handles
+  -- the actual numeric selection independently. Never mutate shared label lists.
+  local native_labels = env.engine.schema.config:get_bool('xiaohe_pager/native_labels')
+  if native_labels then
+    env.engine.schema.select_keys = page == 0 and string.rep(' ', 10) or '1234567890'
+  end
   put(ctx, 'count', #window)
   put(ctx, 'next', next_page and 1 or 0)
   put(ctx, 'offset', offset)
@@ -42,7 +50,7 @@ function M.func(input, env)
   for i, candidate in ipairs(window) do
     -- A nonempty zero-width comment also suppresses inherited completion hints
     -- on bundled Lua versions that retain comments for an empty shadow value.
-    local comment = page == 0 and utf8.char(0x200B) or tostring(i % 10) .. ' '
+    local comment = (native_labels or page == 0) and utf8.char(0x200B) or tostring(i % 10) .. ' '
     -- Keep the genuine candidate and committed text; digits are display-only.
     yield(ShadowCandidate(candidate, candidate.type, candidate.text, comment, false))
   end

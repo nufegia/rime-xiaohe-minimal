@@ -1,10 +1,11 @@
+# Native labels are per-session; spaces on page zero, 1..9,0 later.
 patch:
   style:
     font_face: MiSans, MiSans L3, Segoe UI Emoji
     font_point: 16
-    label_font_point: 0
+    label_font_point: 11
     comment_font_point: 0
-    label_format: ''
+    label_format: '%s'
     horizontal: true
     inline_preedit: true
     inline_candidate: false
@@ -27,7 +28,9 @@ patch:
       min_width: 0
       min_height: 0
   menu:
-    page_size: 3
+    page_size: 10
+    alternative_select_keys: '          '
+    alternative_select_labels: []
   preset_color_schemes:
     xiaohe_clear_blue:
       name: 极简 · 浅色
@@ -63,3 +66,18 @@ patch:
       hilited_candidate_label_color: '0x999999'
       hilited_comment_text_color: '0x00000000'
       shadow_color: '0x00000000'
+  engine/processors:
+  - ascii_composer
+  - lua_processor@*xiaohe_pager_keys
+  - lua_processor@*loginput_keys
+  - recognizer
+  - key_binder
+  - speller
+  - punctuator
+  - selector
+  - navigator
+  - express_editor
+  engine/filters:
+  - uniquifier
+  - lua_filter@*xiaohe_pager_filter
+  xiaohe_pager/native_labels: true

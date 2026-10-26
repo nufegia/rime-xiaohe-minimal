@@ -42,6 +42,11 @@ function M.func(key, env)
   if code >= 48 and code <= 57 then choice = (code - 49) % 10 end
   if code == 59 then choice = 1 end -- semicolon
   if code == 39 then choice = 2 end -- apostrophe
+  -- Blank native labels are space select_keys. Intercept space before the
+  -- native selector maps every space to index zero, preserving arrow highlights.
+  if code == 32 and env.engine.schema.config:get_bool('xiaohe_pager/native_labels') then
+    choice = ctx.composition:back().selected_index
+  end
   if choice then
     local count = tonumber(ctx:get_property('xh_pager_count')) or 0
     if choice < count then ctx:select(choice) end

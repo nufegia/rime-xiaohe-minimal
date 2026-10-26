@@ -3,8 +3,8 @@
 schema:
   schema_id: loginput_xiaohe
   name: 小鹤音形
-  version: 1.1.0
-  description: 固定音形码表 + 小鹤双拼整句；不学习、不调频；macOS 首屏3项、后续10项。
+  version: 1.2.0
+  description: 固定音形码表 + 小鹤双拼整句；不学习、不调频；首屏3项、后续10项（由平台补丁启用）。
   dependencies:
   - loginput_xiaohe_fixed
   author:

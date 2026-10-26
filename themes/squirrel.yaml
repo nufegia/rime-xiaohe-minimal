@@ -1,5 +1,6 @@
 # macOS: first page 3, subsequent pages 10. U+200B prevents surrogate splitting.
 patch:
+  xiaohe_pager/native_labels: false
   style:
     color_scheme: xiaohe_clear_blue
     color_scheme_dark: xiaohe_clear_blue_dark

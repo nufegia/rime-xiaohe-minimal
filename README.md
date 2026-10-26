@@ -1,6 +1,6 @@
 # 小鹤音形 · 极简 Rime 配置
 
-固定音形码表优先，小鹤双拼整句补充；不学习、不调频。支持 macOS 鼠须管与 Windows 小狼毫，适合以盲打为主、偶尔查看候选的使用者。
+固定音形码表优先，小鹤双拼整句补充；不学习、不调频。支持 macOS 鼠须管、Windows 小狼毫及 Linux Fcitx5／IBus Rime，适合以盲打为主、偶尔查看候选的使用者。
 
 这是第三方配置项目，与小鹤官方、落格输入法和 Rime 官方没有隶属关系。
 
@@ -8,11 +8,11 @@
 
 ## 交给智能体的一句话
 
-> 请帮我安装 https://github.com/nufegia/rime-xiaohe-minimal ，先阅读 README 和 docs/AGENT_INSTALL.md，识别 Windows 或 macOS，备份并保留现有 Rime 方案，配置对应平台主题和 MiSans 同系列字体，使用仓库附带码表（已有同名本地码表则先保留并比较），保持不学习不调频，重新部署并验证日期、快捷选词和回退；若缺少依赖、字体或需要系统手动启用输入法，请明确告诉我，不要静默覆盖已有词库或声称未验证的步骤已经成功。
+> 请帮我安装 https://github.com/nufegia/rime-xiaohe-minimal ，先阅读 README 和 docs/AGENT_INSTALL.md，识别 macOS、Windows 或 Linux 的 Fcitx5／IBus，备份并保留现有 Rime 方案，配置对应平台分页和 MiSans 同系列字体（Linux 保留桌面候选面板风格），使用仓库附带码表（已有同名本地码表则先保留并比较），保持不学习不调频，重新部署并验证日期、快捷选词和回退；若缺少依赖、字体或需要系统手动启用输入法，请明确告诉我，不要静默覆盖已有词库或声称未验证的步骤已经成功。
 
 ## 输入体验
 
-macOS 从 1.1.0 起默认启用已试用确认的 3/10 分页，不再需要选择实验方案。Windows 保留原来的统一三项分页；本次不将 macOS 的显示实现直接套用到小狼毫。
+从 1.2.0 起，四种前端均启用 3/10 分页。macOS 沿用使用者确认正常的显示方式；Windows／Linux 使用各自前端的原生标签。
 
 - 固定码表精确候选保持码表顺序；双拼整句作为补充。
 - 空格上屏，不启用四码自动上屏。
@@ -20,11 +20,11 @@ macOS 从 1.1.0 起默认启用已试用确认的 3/10 分页，不再需要选�
 - `Tab` / `Shift+Tab`，以及 `=` / `-` 翻页。
 - `op` 实时生成五种日期：`20261025`、`2026-10-25`、`2026.10.25`、`2026-10-25 17:26`、`2026年10月25日17时26分`（此处时间仅作示例）。首屏三个格式，后两个格式在下一页。
 - 禁用自动学习、用户词频排序和自动造词；仍支持由内置词典进行整句组词。
-- macOS 首屏三项、无编号；后续每屏最多十项，前置编号 `1～9、0`，按 `0` 选择当前页第十项。Windows 每屏三项、无编号。均为横排、中性灰极简样式，明暗配色跟随系统。
+- 首屏三项、无可见编号；后续每屏最多十项，前置编号 `1～9、0`，按 `0` 选择当前页第十项。macOS／Windows 提供横排、中性灰极简主题及明暗配色；Linux 沿用 Fcitx5／IBus 和桌面面板的外观、字体及明暗设置。
 - macOS 中英文切换时不显示“中文”或“西文”状态提示；不改变 Caps Lock 的原有按键行为。
 - 中文使用 **MiSans 字体及同系列 MiSans L3 生僻字扩展**；emoji 显式回退到 macOS 的 Apple Color Emoji 或 Windows 的 Segoe UI Emoji。系统 emoji 字体不打包。不保证覆盖所有 Unicode 汉字或系统尚未支持的新 emoji。
 
-macOS 用 Lua 维护首屏 3 项、后续 10 项的逻辑页，保持原候选的连续顺序。修改编码、移动输入光标、取消或重新输入时回到首屏。编号由显示注释提供，不进入上屏文字；首屏注释为不可见字符，不显示原有补码提示。原生页号不能反映逻辑页号；鼠须管滚轮直接调用原生分页接口，目前请用 `Tab` / `Shift+Tab`、`=` / `-` 或 Page Down / Page Up 翻页。
+各平台用 Lua 维护首屏 3 项、后续 10 项的逻辑页，保持原候选的连续顺序。修改编码、移动输入光标、取消或重新输入时回到首屏。macOS 编号由显示注释提供，Windows／Linux 编号由每个会话独立的 select_keys 提供，不改共享配置；编号不进入上屏文字，原有补码注释隐藏。首屏标签是空格，因此部分面板可能保留少量标签占位。原生页号不能反映逻辑页号；原生滚轮、面板翻页按钮直接调用原生分页接口时不支持本逻辑分页，请用 `Tab` / `Shift+Tab`、`=` / `-` 或 Page Down / Page Up 翻页。
 
 macOS 候选格式带一个 U+200B 零宽前缀，用于绕过鼠须管 1.1.2 在无编号候选开头拆分非 BMP 字符的排版问题；不改变候选文字或上屏内容。请勿直接将 `candidate_format` 简化成裸 `[candidate]`。
 
@@ -32,7 +32,7 @@ macOS：主题绘制阴影为零，但鼠须管 1.1.2 仍固定启用 macOS 外�
 
 ## 安装
 
-前置条件：已安装支持 librime-lua 的鼠须管或小狼毫，具备 `luna_pinyin` 词典、`t2s.json` 转换资源，Python 3.10+ 和依赖。本仓库不替代系统输入法安装器。
+前置条件：已安装支持 librime-lua 的鼠须管、小狼毫、fcitx5-rime 或 ibus-rime，具备 `luna_pinyin` 词典、`t2s.json` 转换资源，Python 3.10+ 和依赖。本仓库不替代系统输入法安装器。
 
 ```sh
 git clone https://github.com/nufegia/rime-xiaohe-minimal.git
@@ -51,6 +51,15 @@ py -3 -m venv .venv
 .\.venv\Scripts\python.exe scripts/manage.py install
 ```
 
+Linux（明确选择实际使用的前端，避免猜错目录）：
+
+```sh
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python scripts/manage.py install --platform fcitx5
+# 使用 IBus 时改为：
+.venv/bin/python scripts/manage.py install --platform ibus
+```
+
 默认安装仓库附带码表。若目标电脑已有兼容同名表，默认保留；要明确替换，可加 `--table PATH`。也支持现有、独立的 `loginput_xiaohe_fixed.dict.yaml`，会保留其字词、权重和排序。纯文本格式必须为 UTF-8 的 `文字<TAB>编码[<TAB>权重]`；纯文本导入时按每个编码下的原行序赋权，而非采用第三列的历史频率。
 
 若用户目录已经有兼容的固定词典，可以省略 `--table`；安装器只在本机读取，不上传。用户另行提供的私人码表与导入产物请放在仓库外或 `local/` 下。
@@ -61,15 +70,16 @@ py -3 -m venv .venv
 python scripts/manage.py install --phonetic-only
 ```
 
-安装器默认写入 macOS 的 `~/Library/Rime` 或 Windows 的 `%APPDATA%\Rime`。小狼毫可使用自定义用户目录，请先通过输入法菜单确认，用 `--user-dir PATH` 指定。`--dry-run` 可以提前查看修改计划。
+安装器默认写入 macOS 的 `~/Library/Rime` 或 Windows 的 `%APPDATA%\Rime`。小狼毫可使用自定义用户目录，请先通过输入法菜单确认，用 `--user-dir PATH` 指定。Fcitx5 默认为 `${XDG_DATA_HOME:-~/.local/share}/fcitx5/rime`，IBus 默认为 `~/.config/ibus/rime`（上游 IBus Rime 当前不遵循 XDG_CONFIG_HOME）；特殊打包或自定义目录请用 `--user-dir PATH`。Linux 必须显式指定 `--platform fcitx5` 或 `--platform ibus`。`--dry-run` 可以提前查看修改计划。
 
-安装后必须重新部署：macOS 用菜单「重新部署」，或运行 `/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel --reload`；Windows 用小狼毫托盘菜单「重新部署」。系统首次添加输入法可能需要手动完成。
+安装后必须重新部署：macOS 用菜单「重新部署」，或运行 `/Library/Input Methods/Squirrel.app/Contents/MacOS/Squirrel --reload`；Windows 用小狼毫托盘菜单「重新部署」。Linux 使用 Fcitx5 的 Rime「部署」或 IBus Rime 菜单「部署」，必要时重启对应前端。系统首次添加输入法可能需要手动完成。
 
 ```sh
 python scripts/manage.py doctor
+# Linux 追加 --platform fcitx5 或 --platform ibus
 ```
 
-`doctor` 检查生成后的禁用学习设置、平台页容量及 macOS 分页模块，不代表 Lua、字体或候选窗口都经过实机验证。还需按[智能体安装指南](docs/AGENT_INSTALL.md)测试实际输入。
+`doctor` 检查生成后的禁用学习设置、平台页容量、分页模块及标签配置，不代表 Lua、字体或候选窗口都经过实机验证。还需按[智能体安装指南](docs/AGENT_INSTALL.md)测试实际输入。
 
 ## 备份与回退
 
@@ -86,6 +96,6 @@ python scripts/manage.py restore --backup "/安装时显示的备份目录"
 - 配置和程序采用 GPL-3.0-or-later；双拼拼写规则参考 Rime 官方小鹤双拼，保留来源说明，见 [NOTICE](NOTICE)。
 - 附带码表及外部导入码表不受本仓库 GPL 许可证重新授权；附带表的来源和再分发授权未核实，第三方权利保留。[授权调查与发布边界](docs/LICENSING.md)
 - MiSans 需注明使用；署名不能替代其他许可条件。请从[小米官网](https://hyperos.mi.com/font/zh/download/)取得 MiSans Regular 与 MiSans L3，原样安装，不向本仓库上传字体。
-- macOS 已验证本机 Rime 引擎输入、码表导入及字体覆盖；3/10 分页已通过 1,196 项引擎检查并经使用者确认正常；Windows 外观按小狼毫官方配置和代码适配。安装器自动测试覆盖 macOS / Windows；原生 Windows 候选窗口与字体显示仍需实机验收。详见 [测试说明](docs/TESTING.md)。
+- 四种生成配置已在本机 librime + Lua 上各通过 1,205 项逻辑检查（共 4,820 项），包括全页候选顺序、数字选择和双会话标签隔离；12 项安装器测试覆盖备份与回退。macOS 旧版分页经使用者确认；Windows／Linux 原生窗口、字体及桌面集成未实机验证。详见 [测试说明](docs/TESTING.md) 和 [跨平台实现](docs/CROSS_PLATFORM.md)。
 
 原项目名称、版权和商标均归各自权利人所有。本项目不是官方“小鹤音形”发布版。

@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-26",
+  "engine_host": "macOS; Squirrel bundled librime 1.16.0 + Lua",
+  "native_frontends_executed": false,
+  "results": [
+    {
+      "platform": "macos",
+      "cases": 1205,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ]
+    },
+    {
+      "platform": "windows",
+      "cases": 1205,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ]
+    },
+    {
+      "platform": "fcitx5",
+      "cases": 1205,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ]
+    },
+    {
+      "platform": "ibus",
+      "cases": 1205,
+      "failures": 0,
+      "native_ui_verified": false,
+      "cross_session_labels_isolated": true,
+      "no_learning_database": true,
+      "baseline_candidate_counts": {
+        "hs": 258,
+        "kr": 50,
+        "ni": 211,
+        "nihc": 178,
+        "nihcuijp": 179,
+        "o": 70,
+        "oh": 1,
+        "a": 337,
+        "b": 1889,
+        "c": 806,
+        "os": 1,
+        "hsa": 173,
+        "h": 2000
+      },
+      "edit_prefix_only": [
+        "h"
+      ]
+    }
+  ]
+}

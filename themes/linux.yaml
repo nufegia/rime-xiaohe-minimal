@@ -1,0 +1,21 @@
+# Fcitx5/IBus draw their own panels; do not import Squirrel/Weasel styles.
+patch:
+  engine/processors:
+  - ascii_composer
+  - lua_processor@*xiaohe_pager_keys
+  - lua_processor@*loginput_keys
+  - recognizer
+  - key_binder
+  - speller
+  - punctuator
+  - selector
+  - navigator
+  - express_editor
+  engine/filters:
+  - uniquifier
+  - lua_filter@*xiaohe_pager_filter
+  menu:
+    page_size: 10
+    alternative_select_keys: '          '
+    alternative_select_labels: []
+  xiaohe_pager/native_labels: true

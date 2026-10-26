@@ -101,12 +101,17 @@ def frontend_name(requested):
         return 'macos'
     if current == 'Windows':
         return 'windows'
-    raise ValueError('Use --platform macos or windows for staging on another platform')
+    raise ValueError('On Linux select --platform fcitx5 or --platform ibus explicitly')
 
 
 def default_user_dir(frontend):
     if frontend == 'macos':
         return Path.home() / 'Library/Rime'
+    if frontend == 'fcitx5':
+        return Path(os.environ.get('XDG_DATA_HOME') or Path.home() / '.local/share') / 'fcitx5/rime'
+    if frontend == 'ibus':
+        # Upstream ibus-rime uses HOME/.config directly, not XDG_CONFIG_HOME.
+        return Path.home() / '.config/ibus/rime'
     if 'APPDATA' not in os.environ:
         raise ValueError('APPDATA is unavailable; pass --user-dir explicitly')
     # Custom Weasel paths must be passed explicitly after checking the user folder.
@@ -162,9 +167,8 @@ def install(args):
     files[SCHEMA + '.schema.yaml'] = dump(schema)
     files['lua/loginput_mix.lua'] = mix.encode('utf-8')
     files['lua/loginput_keys.lua'] = (REPO / 'rime/lua/loginput_keys.lua').read_bytes()
-    if frontend == 'macos':
-        for name in ('xiaohe_pager_keys.lua', 'xiaohe_pager_filter.lua'):
-            files['lua/' + name] = (REPO / 'rime/lua' / name).read_bytes()
+    for name in ('xiaohe_pager_keys.lua', 'xiaohe_pager_filter.lua'):
+        files['lua/' + name] = (REPO / 'rime/lua' / name).read_bytes()
     if not args.phonetic_only:
         files[SCHEMA + '_fixed.schema.yaml'] = (REPO / 'rime' / (SCHEMA + '_fixed.schema.yaml')).read_bytes()
         if table_data is not None:
@@ -176,11 +180,14 @@ def install(args):
         phrase_text = (root / (SCHEMA + '_custom.txt')).read_text(encoding='utf-8-sig')
         if not all(t in phrase_text for t in ['@date:#yyyy#MM#dd\top', '@date:#yyyy-#MM-#dd\top', '@date:#yyyy.#MM.#dd\top', '@date:#yyyy-#MM-#dd #HH:#mm\top', '@date:#yyyy年#MM月#dd日#HH时#mm分\top']):
             raise ValueError('Existing custom phrase file lacks the standard date templates; merge it manually first to preserve personal op bindings')
-    theme = read_yaml(REPO / 'themes' / ('squirrel.yaml' if frontend == 'macos' else 'weasel.yaml'))
+    theme_name = {'macos': 'squirrel', 'windows': 'weasel', 'fcitx5': 'linux', 'ibus': 'linux'}[frontend]
+    theme = read_yaml(REPO / 'themes' / (theme_name + '.yaml'))
     custom = read_yaml(root / (SCHEMA + '.custom.yaml'))
     patch = custom.setdefault('patch', {})
     if not isinstance(patch, dict):
         raise ValueError('Schema custom patch must be a mapping')
+    for key in ('page_size', 'alternative_select_keys', 'alternative_select_labels'):
+        patch.pop('menu/' + key, None)
     # Platform theme is intentionally replaced; unrelated input customizations survive.
     for key, value in theme['patch'].items():
         if key == 'menu':
@@ -228,7 +235,7 @@ def install(args):
         raise
     summary['backup'] = str(backup)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
-    print('Now redeploy Rime. macOS: Squirrel --reload. Windows: tray menu > 重新部署.')
+    print('Now redeploy Rime. macOS: Squirrel --reload. Windows: tray menu > 重新部署. Linux: frontend menu > Deploy/重新部署.')
     print('Existing learning databases were not deleted; this schema disables their use.')
 
 
@@ -266,19 +273,30 @@ def doctor(args):
     for key in ['enable_user_dict', 'enable_encoder', 'encode_commit_history']:
         if config.get('translator', {}).get(key) is not False:
             raise ValueError(f'Learning guard failed: translator/{key}')
-    expected_size = 10 if frontend == 'macos' else 3
+    expected_size = 10
     if config.get('menu', {}).get('page_size') != expected_size:
         raise ValueError(f'Expected menu/page_size={expected_size}')
+    if 'lua_filter@*xiaohe_pager_filter' not in config.get('engine', {}).get('filters', []):
+        raise ValueError('Logical pager filter is missing')
+    if 'lua_processor@*xiaohe_pager_keys' not in config.get('engine', {}).get('processors', []):
+        raise ValueError('Logical pager key handler is missing')
     if frontend == 'macos':
-        if 'lua_filter@*xiaohe_pager_filter' not in config.get('engine', {}).get('filters', []):
-            raise ValueError('macOS logical pager filter is missing')
-        if 'lua_processor@*xiaohe_pager_keys' not in config.get('engine', {}).get('processors', []):
-            raise ValueError('macOS logical pager key handler is missing')
+        if config.get('xiaohe_pager', {}).get('native_labels'):
+            raise ValueError('macOS requires display-only comment labels')
         if config.get('style', {}).get('candidate_format') != '\u200b[comment][candidate]':
             raise ValueError('macOS pager requires the display-only comment prefix')
-        print('Compiled configuration verified: learning disabled; macOS 3/10 logical pager installed.')
     else:
-        print('Compiled configuration verified: learning disabled; Windows 3 candidates per page.')
+        if config.get('xiaohe_pager', {}).get('native_labels') is not True:
+            raise ValueError('Native per-session labels must be enabled')
+        if config.get('menu', {}).get('alternative_select_labels'):
+            raise ValueError('Explicit labels would override per-session labels')
+        if config.get('menu', {}).get('alternative_select_keys') != ' ' * 10:
+            raise ValueError('Expected ten initial blank select-key labels')
+        if frontend == 'windows':
+            style = config.get('style', {})
+            if style.get('label_format') != '%s' or style.get('label_font_point', 0) <= 0:
+                raise ValueError('Windows labels require %s format and a visible label font')
+    print(f'Compiled configuration verified: learning disabled; {frontend} 3/10 logical pager installed.')
     print('Still verify actual input: op, op;, op\', nihcuijp and a known code from your local table.')
     print('Font coverage and frontend UI need native checking; compilation alone does not verify them.')
 
@@ -293,7 +311,7 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     for cmd, handler in [('install', install), ('doctor', doctor)]:
         p = commands.add_parser(cmd)
-        p.add_argument('--platform', choices=['macos', 'windows'])
+        p.add_argument('--platform', choices=['macos', 'windows', 'fcitx5', 'ibus'])
         p.add_argument('--user-dir', type=Path)
         p.set_defaults(handler=handler)
         if cmd == 'install':
