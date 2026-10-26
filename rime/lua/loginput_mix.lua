@@ -26,8 +26,8 @@ function M.func(input, seg, env)
       yield(cand)
     end
   end
-  -- Once part of the composition is confirmed, only the remaining phonetic
-  -- segment is translated. Do not inject whole-code fixed phrases into it.
+  -- Whole-composition custom phrases keep their existing scope. Fixed codes
+  -- below use the current segment input, including a tail after prefix selection.
   local whole = seg.start == 0 and input == env.engine.context.input
   local completions = {}
   local exact = false
@@ -60,22 +60,22 @@ function M.func(input, seg, env)
         end
       end
     end
-    if #input <= 4 and input:match('^[a-z]+$') then
-      local fixed = env.fixed:query(input, seg)
-      if fixed then
-        for cand in fixed:iter() do
-          if cand.type == 'completion' then
-            completions[#completions + 1] = cand
-          else
-            exact = true
-            emit(cand, false)
-          end
+  end
+  if #input <= 4 and input:match('^[a-z]+$') then
+    local fixed = env.fixed:query(input, seg)
+    if fixed then
+      for cand in fixed:iter() do
+        if cand.type == 'completion' then
+          completions[#completions + 1] = cand
+        else
+          exact = true
+          emit(cand, false)
         end
       end
     end
   end
   -- An empty three-key code slides down to its longer fixed codes.
-  local slide_first = whole and #input == 3 and not exact
+  local slide_first = #input == 3 and not exact
   if slide_first then
     for _,cand in ipairs(completions) do emit(cand, false) end
   end

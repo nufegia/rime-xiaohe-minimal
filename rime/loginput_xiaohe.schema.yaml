@@ -3,7 +3,7 @@
 schema:
   schema_id: loginput_xiaohe
   name: 小鹤音形
-  version: 1.3.1
+  version: 1.3.2
   description: 固定音形码表 + 小鹤双拼整句；不学习、不调频；支持简繁切换；首屏3项、后续10项（由平台补丁启用）。
   dependencies:
   - loginput_xiaohe_fixed
