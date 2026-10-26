@@ -11,6 +11,10 @@
 - 附带固定表的全部 41,685 条数据行与本机当前使用的表一致，没有重新排序。
 - 本机 CoreText 验证「你好」「𥥈」「𣎑」由 MiSans Regular / MiSans L3 实际提供非零字形。
 
+## macOS 西文提示验证（2026-10-26）
+
+在临时目录部署后，通过本机 librime API 检查 ascii_mode=true 的长、短状态标签均为空；鼠须管仅在标签非空时显示状态提示。中文模式标签、日期及双拼整句保留。未自动操作物理 Caps Lock 键进行原生窗口截图验收。
+
 ## 自动测试
 
 GitHub Actions 在 macOS、Windows 和 Linux 运行安装器测试。请查看仓库 Actions 中具体提交的结果；工作流存在本身不等于通过。
