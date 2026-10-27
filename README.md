@@ -99,6 +99,6 @@ python scripts/manage.py restore --backup "/安装时显示的备份目录"
 - 配置和程序采用 GPL-3.0-or-later；双拼拼写规则参考 Rime 官方小鹤双拼，保留来源说明，见 [NOTICE](NOTICE)。
 - 附带码表及外部导入码表不受本仓库 GPL 许可证重新授权；附带表的来源和再分发授权未核实，第三方权利保留。[授权调查与发布边界](docs/LICENSING.md)
 - MiSans 需注明使用；署名不能替代其他许可条件。请从[小米官网](https://hyperos.mi.com/font/zh/download/)取得 MiSans Regular 与 MiSans L3，原样安装，不向本仓库上传字体。
-- 四种生成配置已在本机 librime + Lua 上各通过 1,499 项逻辑检查（共 5,996 项），包括简繁转换、方案菜单切换、全页候选顺序、数字选择和双会话隔离；14 项安装器测试覆盖备份与回退。macOS 旧版分页经使用者确认；Windows／Linux 原生窗口、字体及桌面集成未实机验证。详见 [测试说明](docs/TESTING.md) 和 [跨平台实现](docs/CROSS_PLATFORM.md)。
+- 四种生成配置已在本机 librime + Lua 上各通过 1,499 项逻辑检查（共 5,996 项），包括简繁转换、方案菜单切换、全页候选顺序、数字选择和双会话隔离；14 项安装器测试覆盖备份与回退。macOS 旧版分页经使用者确认；使用者确认本次 Windows 小狼毫实机测试通过，候选字号调整为 14 后显示合适。Linux 原生窗口及桌面集成尚未实机验证。详见 [测试说明](docs/TESTING.md) 和 [跨平台实现](docs/CROSS_PLATFORM.md)。
 
 原项目名称、版权和商标均归各自权利人所有。本项目不是官方“小鹤音形”发布版。

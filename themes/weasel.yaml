@@ -2,7 +2,7 @@
 patch:
   style:
     font_face: MiSans, MiSans L3, Segoe UI Emoji
-    font_point: 16
+    font_point: 14
     label_font_point: 11
     comment_font_point: 0
     label_format: '%s'
