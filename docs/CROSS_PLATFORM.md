@@ -63,3 +63,9 @@ python tests/check_pager_engine.py --probe /tmp/xiaohe-engine-probe \
 - [IBus 用户目录](https://github.com/rime/ibus-rime/blob/master/rime_main.c) 与 [Fcitx5 数据目录](https://github.com/fcitx/fcitx5-rime/blob/master/src/rimeengine.cpp)。
 
 以上源码检查结合共同引擎测试支持当前逻辑实现；目标机上的具体前端版本、桌面面板和字体仍需要实际使用时确认。
+
+## 左右修饰键选字
+
+平台补丁设置 `xiaohe_pager/selection_modifier`：macOS 为 `Super`（Command），Windows、Fcitx5、IBus 为 `Control`。左键选当前页第二项，右键选第三项，按下立即上屏，松开不选；候选不足时放行。英文模式、无候选菜单或已按住其他修饰键时放行。数字键仍可选字。分号与单引号不再选字。
+
+有候选时，Command/Ctrl 组合快捷键的首次修饰键按下也会先选字。这是立即确认的行为，不进行轻触/组合键延迟识别。Windows/Linux 的原生按键事件传递尚未实机验证；此前分号/单引号的测试记录不代表新绑定已通过验证。

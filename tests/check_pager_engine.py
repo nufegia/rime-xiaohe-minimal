@@ -46,6 +46,8 @@ reports = []
 for frontend in ('macos', 'windows', 'fcitx5', 'ibus'):
     STAGE = install(frontend, frontend)
     native = frontend != 'macos'
+    second = '{Control_L}' if native else '{Super_L}'
+    third = '{Control_R}' if native else '{Super_R}'
     run(STAGE, [], deploy=True)
     subprocess.run([sys.executable, str(REPO/'scripts/manage.py'), 'doctor',
                     '--platform', frontend, '--user-dir', str(STAGE)], check=True)
@@ -84,10 +86,10 @@ for frontend in ('macos', 'windows', 'fcitx5', 'ibus'):
     add('keys\ths{Down} ',[],text=base['hs'][1]['text'])
     add('keys\ths{Tab}{Down} ',[],text=base['hs'][4]['text'])
     add('keys\ths{Tab} ',[],text=base['hs'][3]['text'])
-    add('keys\ths{Tab};',[],text=base['hs'][4]['text'])
-    add("keys\ths{Tab}'",[],text=base['hs'][5]['text'])
-    add('keys\tnihcuijp; ',[],text='你好世界')
-    add("keys\tnihcuijp' ",[],text='妳好世界')
+    add('keys\ths{Tab}'+second,[],text=base['hs'][4]['text'])
+    add('keys\ths{Tab}'+third,[],text=base['hs'][5]['text'])
+    add('keys\tnihcuijp'+second+' ',[],text='你好世界')
+    add('keys\tnihcuijp'+third+' ',[],text='妳好世界')
     add('keys\toh ',[],text='🔴')
     add('keys\t1,',[],text=',')
     rows=run(STAGE,commands)

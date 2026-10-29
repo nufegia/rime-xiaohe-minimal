@@ -124,16 +124,12 @@ ascii_composer:
     Shift_R: noop
     Control_L: noop
     Control_R: noop
+    Super_L: noop
+    Super_R: noop
     Caps_Lock: clear
     Eisu_toggle: clear
 key_binder:
   bindings:
-  - when: has_menu
-    accept: semicolon
-    send: '2'
-  - when: has_menu
-    accept: apostrophe
-    send: '3'
   - when: has_menu
     accept: Tab
     send: Page_Down

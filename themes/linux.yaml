@@ -1,5 +1,6 @@
 # Fcitx5/IBus draw their own panels; do not import Squirrel/Weasel styles.
 patch:
+  xiaohe_pager/selection_modifier: Control
   engine/processors:
   - ascii_composer
   - lua_processor@*xiaohe_pager_keys

@@ -1,5 +1,6 @@
 # Native labels are per-session; spaces on page zero, 1..9,0 later.
 patch:
+  xiaohe_pager/selection_modifier: Control
   style:
     font_face: MiSans, MiSans L3, Segoe UI Emoji
     font_point: 14
